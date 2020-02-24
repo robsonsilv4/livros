@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import 'livro_widget.dart';
+
 class HomePage extends StatefulWidget {
   @override
   _HomePageState createState() => _HomePageState();
@@ -90,7 +92,16 @@ class _HomePageState extends State<HomePage> {
                         ),
                       );
                     }),
-              )
+              ),
+              Expanded(
+                child: ListView.builder(
+                  itemCount: categorias.length,
+                  shrinkWrap: true,
+                  itemBuilder: (context, index) {
+                    return LivroWidget();
+                  },
+                ),
+              ),
             ],
           ),
         ),
