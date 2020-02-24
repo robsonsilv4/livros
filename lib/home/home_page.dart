@@ -45,7 +45,7 @@ class _HomePageState extends State<HomePage> {
                       child: Text(
                         'Procurar',
                         style: TextStyle(
-                          fontSize: 26,
+                          fontSize: 32,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -54,7 +54,7 @@ class _HomePageState extends State<HomePage> {
                   Text(
                     'Recomendados',
                     style: TextStyle(
-                      fontSize: 14,
+                      fontSize: 16,
                       fontWeight: FontWeight.bold,
                       color: Colors.grey.shade400,
                     ),
