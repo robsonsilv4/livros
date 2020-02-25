@@ -1,41 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../repository.dart';
+import '../models/result_status_model.dart';
 import '../widgets/livro_widget.dart';
 import 'bloc/home_page_bloc.dart';
 import 'bloc/home_page_event.dart';
 import 'bloc/home_page_state.dart';
 
-class HomePage extends StatefulWidget {
-  @override
-  _HomePageState createState() => _HomePageState();
-}
-
-class _HomePageState extends State<HomePage> {
+class HomePage extends StatelessWidget {
   final List<String> categorias = [
     'Autoajuda',
     'Programação',
     'Matemática',
-    'Ficção',
+    'litertura',
     'Religião',
   ];
-
-  int _categoriaSelecionada = 0;
-
-  HomePageBloc _bloc;
-
-  @override
-  void initState() {
-    super.initState();
-    // Para tela cheia
-    SystemChrome.setEnabledSystemUIOverlays([]);
-
-    _bloc = HomePageBloc(repository: Repository());
-
-    _bloc.add(SearchEvent(query: categorias[0]));
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -50,9 +29,9 @@ class _HomePageState extends State<HomePage> {
               Row(
                 children: <Widget>[
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 24),
+                    padding: EdgeInsets.symmetric(horizontal: 24.0),
                     child: Padding(
-                      padding: const EdgeInsets.only(right: 24.0),
+                      padding: EdgeInsets.only(right: 24.0),
                       child: Text(
                         'Procurar',
                         style: TextStyle(
@@ -72,53 +51,70 @@ class _HomePageState extends State<HomePage> {
                   )
                 ],
               ),
-              Container(
-                height: 80,
-                width: MediaQuery.of(context).size.width,
-                child: ListView.builder(
-                    scrollDirection: Axis.horizontal,
-                    shrinkWrap: true,
-                    itemCount: categorias.length,
-                    itemBuilder: (context, index) {
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 6.0),
-                        child: GestureDetector(
-                          onTap: () => _onCategorySelected(index),
-                          child: Chip(
-                            padding: EdgeInsets.symmetric(horizontal: 8.0),
-                            backgroundColor: index == _categoriaSelecionada
-                                ? Colors.blue
-                                : Colors.grey.shade200,
-                            label: Text(
-                              categorias.elementAt(index),
-                              style: TextStyle(
-                                  color: index == _categoriaSelecionada
-                                      ? Colors.white
-                                      : Colors.grey.shade500),
-                            ),
-                          ),
-                        ),
-                      );
-                    }),
-              ),
               BlocBuilder<HomePageBloc, HomePageState>(
-                bloc: _bloc,
+                  bloc: BlocProvider.of<HomePageBloc>(context),
+                  builder: (context, state) {
+                    return Container(
+                      height: 80,
+                      width: MediaQuery.of(context).size.width,
+                      padding: EdgeInsets.only(left: 16.0),
+                      child: ListView.builder(
+                          scrollDirection: Axis.horizontal,
+                          shrinkWrap: true,
+                          itemCount: categorias.length,
+                          itemBuilder: (context, index) {
+                            final categoria = categorias.elementAt(index);
+                            print(categoria);
+                            final categoriaSelecionada =
+                                categoria == state.categoria;
+                            print(categoriaSelecionada);
+
+                            return Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 6.0),
+                              child: GestureDetector(
+                                onTap: () {
+                                  BlocProvider.of<HomePageBloc>(context).add(
+                                    SearchEvent(categoria: categoria),
+                                  );
+                                },
+                                child: Chip(
+                                  padding:
+                                      EdgeInsets.symmetric(horizontal: 8.0),
+                                  backgroundColor: categoriaSelecionada
+                                      ? Colors.blue
+                                      : Colors.grey.shade200,
+                                  label: Text(
+                                    categoria,
+                                    style: TextStyle(
+                                      color: categoriaSelecionada
+                                          ? Colors.white
+                                          : Colors.grey.shade500,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            );
+                          }),
+                    );
+                  }),
+              BlocBuilder<HomePageBloc, HomePageState>(
+                bloc: BlocProvider.of<HomePageBloc>(context),
                 builder: (context, state) {
-                  if (state is ErrorState) {
+                  if (state.livros.status == ResultStatus.error) {
                     return Center(
-                      child: Text(state.mensagem),
+                      child: Text(state.livros.error),
                     );
                   }
 
-                  if (state is LoadedState) {
+                  if (state.livros.status == ResultStatus.success) {
                     final livros = state.livros;
 
                     return Expanded(
                       child: ListView.builder(
-                        itemCount: livros.length,
+                        itemCount: livros.data.length,
                         shrinkWrap: true,
                         itemBuilder: (context, index) {
-                          final item = livros.elementAt(index);
+                          final item = livros.data.elementAt(index);
                           return LivroWidget(
                             livro: item,
                           );
@@ -137,14 +133,5 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
     );
-  }
-
-  _onCategorySelected(int index) {
-    setState(() {
-      _categoriaSelecionada = index;
-    });
-
-    final categoria = categorias[index];
-    _bloc.add(SearchEvent(query: categoria));
   }
 }

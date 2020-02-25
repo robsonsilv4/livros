@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../models.dart';
+import '../models/livros_api_model.dart';
 
 class LivroWidget extends StatelessWidget {
   final Item livro;

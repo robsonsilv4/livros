@@ -7,7 +7,7 @@ class HomePageEvent extends Equatable {
 }
 
 class SearchEvent extends HomePageEvent {
-  final String query;
+  final String categoria;
 
-  SearchEvent({@required this.query});
+  SearchEvent({@required this.categoria});
 }
