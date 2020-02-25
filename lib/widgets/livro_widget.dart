@@ -1,6 +1,14 @@
 import 'package:flutter/material.dart';
 
+import '../models.dart';
+
 class LivroWidget extends StatelessWidget {
+  final Item livro;
+
+  LivroWidget({@required this.livro}) : assert(livro != null);
+
+  VolumeInfo get livroInfo => livro.volumeinfo;
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -11,13 +19,18 @@ class LivroWidget extends StatelessWidget {
         children: <Widget>[
           Align(
             alignment: Alignment.centerRight,
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(12.0),
-              child: Image.network(
-                'https://picsum.photos/240',
-                width: 200,
-                height: 240,
-                fit: BoxFit.cover,
+            child: Container(
+              width: 200.0,
+              decoration: BoxDecoration(
+                border: Border.all(
+                  width: 1.0,
+                  color: Colors.grey.shade300,
+                ),
+                borderRadius: BorderRadius.circular(12.0),
+                image: DecorationImage(
+                  fit: BoxFit.fill,
+                  image: NetworkImage(livroInfo.image.thumb),
+                ),
               ),
             ),
           ),
@@ -44,14 +57,16 @@ class LivroWidget extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Text(
-                    'Aprenda React com Flutter',
+                    livroInfo.title,
+                    maxLines: 3,
+                    overflow: TextOverflow.ellipsis,
                     style: TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                   Text(
-                    'Robson Silva',
+                    livroInfo.publisher,
                     style: TextStyle(
                       color: Colors.grey,
                     ),

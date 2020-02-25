@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:livros/home/bloc/home_page_bloc.dart';
-import 'package:livros/home/bloc/home_page_event.dart';
-import 'package:livros/home/bloc/home_page_state.dart';
-import 'package:livros/repository.dart';
 
+import '../repository.dart';
 import '../widgets/livro_widget.dart';
+import 'bloc/home_page_bloc.dart';
+import 'bloc/home_page_event.dart';
+import 'bloc/home_page_state.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -83,10 +83,7 @@ class _HomePageState extends State<HomePage> {
                       return Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 6.0),
                         child: GestureDetector(
-                          onTap: () {
-                            _categoriaSelecionada = index;
-                            setState(() {});
-                          },
+                          onTap: () => _onCategorySelected(index),
                           child: Chip(
                             padding: EdgeInsets.symmetric(horizontal: 8.0),
                             backgroundColor: index == _categoriaSelecionada
@@ -121,7 +118,10 @@ class _HomePageState extends State<HomePage> {
                         itemCount: livros.length,
                         shrinkWrap: true,
                         itemBuilder: (context, index) {
-                          return LivroWidget();
+                          final item = livros.elementAt(index);
+                          return LivroWidget(
+                            livro: item,
+                          );
                         },
                       ),
                     );
@@ -137,5 +137,14 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
     );
+  }
+
+  _onCategorySelected(int index) {
+    setState(() {
+      _categoriaSelecionada = index;
+    });
+
+    final categoria = categorias[index];
+    _bloc.add(SearchEvent(query: categoria));
   }
 }
