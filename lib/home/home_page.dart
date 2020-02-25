@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:livros/home/bloc/home_page_bloc.dart';
+import 'package:livros/home/bloc/home_page_event.dart';
+import 'package:livros/home/bloc/home_page_state.dart';
+import 'package:livros/repository.dart';
 
 import '../widgets/livro_widget.dart';
 
@@ -19,11 +24,17 @@ class _HomePageState extends State<HomePage> {
 
   int _categoriaSelecionada = 0;
 
+  HomePageBloc _bloc;
+
   @override
   void initState() {
+    super.initState();
     // Para tela cheia
     SystemChrome.setEnabledSystemUIOverlays([]);
-    super.initState();
+
+    _bloc = HomePageBloc(repository: Repository());
+
+    _bloc.add(SearchEvent(query: categorias[0]));
   }
 
   @override
@@ -93,14 +104,33 @@ class _HomePageState extends State<HomePage> {
                       );
                     }),
               ),
-              Expanded(
-                child: ListView.builder(
-                  itemCount: categorias.length,
-                  shrinkWrap: true,
-                  itemBuilder: (context, index) {
-                    return LivroWidget();
-                  },
-                ),
+              BlocBuilder<HomePageBloc, HomePageState>(
+                bloc: _bloc,
+                builder: (context, state) {
+                  if (state is ErrorState) {
+                    return Center(
+                      child: Text(state.mensagem),
+                    );
+                  }
+
+                  if (state is LoadedState) {
+                    final livros = state.livros;
+
+                    return Expanded(
+                      child: ListView.builder(
+                        itemCount: livros.length,
+                        shrinkWrap: true,
+                        itemBuilder: (context, index) {
+                          return LivroWidget();
+                        },
+                      ),
+                    );
+                  }
+
+                  return Center(
+                    child: CircularProgressIndicator(),
+                  );
+                },
               ),
             ],
           ),
