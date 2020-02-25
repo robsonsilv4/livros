@@ -11,7 +11,7 @@ class HomePageState extends Equatable {
 class LoadingState extends HomePageState {}
 
 class LoadedState extends HomePageState {
-  final List<Book> livros;
+  final List<Item> livros;
 
   LoadedState({@required this.livros});
 }

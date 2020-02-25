@@ -6,22 +6,30 @@ import 'home/bloc/home_page_state.dart';
 import 'models.dart';
 
 class Repository {
-  final baseUrl = 'https://www.googleapis.com/books/v1/volumes';
+  final String baseUrl = "https://www.googleapis.com/books/v1/volumes";
 
   Future<HomePageState> getBooks(String query) async {
-    final url = '$baseUrl?q=$query';
-    final response = await http.get(url);
+    try {
+      final url = "$baseUrl?q=$query";
+      final response = await http.get(url);
 
-    if (response.statusCode == 200) {
-      final json = jsonDecode(response.body);
-      final data = LivrosApiModel.fromJson(json);
-      final livros = data.items;
+      if (response.statusCode == 200) {
+        final json = jsonDecode(response.body);
+        print(json);
+        final data = LivrosApiModel.fromJson(json);
+        final livros = data.items;
 
-      return LoadedState(livros: livros);
+        return LoadedState(livros: livros);
+      }
+
+      return ErrorState(
+        mensagem: 'Ocorreu um erro',
+      );
+    } catch (error) {
+      print(error.toString());
+      return ErrorState(
+        mensagem: 'Erro desconhecido',
+      );
     }
-
-    return ErrorState(
-      mensagem: 'Ocorreu um erro',
-    );
   }
 }
