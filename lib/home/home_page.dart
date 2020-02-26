@@ -9,11 +9,11 @@ import 'bloc/home_page_state.dart';
 
 class HomePage extends StatelessWidget {
   final List<String> categorias = [
-    'Autoajuda',
-    'Programação',
-    'Matemática',
+    'autoajuda',
+    'programacao',
+    'matematica',
     'litertura',
-    'Religião',
+    'religiao',
   ];
 
   @override
@@ -64,10 +64,11 @@ class HomePage extends StatelessWidget {
                           itemCount: categorias.length,
                           itemBuilder: (context, index) {
                             final categoria = categorias.elementAt(index);
-                            print(categoria);
+                            final categoriaCaptalizada =
+                                categoria[0].toUpperCase() +
+                                    categoria.substring(1);
                             final categoriaSelecionada =
                                 categoria == state.categoria;
-                            print(categoriaSelecionada);
 
                             return Padding(
                               padding: EdgeInsets.symmetric(horizontal: 6.0),
@@ -84,7 +85,7 @@ class HomePage extends StatelessWidget {
                                       ? Colors.blue
                                       : Colors.grey.shade200,
                                   label: Text(
-                                    categoria,
+                                    categoriaCaptalizada,
                                     style: TextStyle(
                                       color: categoriaSelecionada
                                           ? Colors.white
