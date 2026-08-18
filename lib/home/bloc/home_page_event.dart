@@ -1,13 +1,17 @@
 import 'package:equatable/equatable.dart';
-import 'package:meta/meta.dart';
 
 class HomePageEvent extends Equatable {
+  const HomePageEvent();
+
   @override
-  List<Object> get props => [];
+  List<Object?> get props => [];
 }
 
 class SearchEvent extends HomePageEvent {
+  const SearchEvent({required this.categoria});
+
   final String categoria;
 
-  SearchEvent({@required this.categoria});
+  @override
+  List<Object?> get props => [categoria];
 }

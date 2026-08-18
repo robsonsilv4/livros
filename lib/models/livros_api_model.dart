@@ -1,82 +1,113 @@
-class LivrosApiModel {
-  final int totalItems;
-  final String kind;
-  final List<Item> items;
+import 'package:equatable/equatable.dart';
 
-  LivrosApiModel({this.items, this.kind, this.totalItems});
+class LivrosApiModel extends Equatable {
+  const LivrosApiModel({
+    this.totalItems,
+    this.kind,
+    this.items,
+  });
 
   factory LivrosApiModel.fromJson(Map<String, dynamic> parsedJson) {
-    var list = parsedJson['items'] as List;
-
-    List<Item> itemList = list.map((i) => Item.fromJson(i)).toList();
+    final list = parsedJson['items'] as List<dynamic>? ?? const [];
 
     return LivrosApiModel(
-        items: itemList,
-        kind: parsedJson['kind'],
-        totalItems: parsedJson['totalItems']);
+      items: list.whereType<Map<String, dynamic>>().map(Item.fromJson).toList(),
+      kind: parsedJson['kind'] as String?,
+      totalItems: parsedJson['totalItems'] as int?,
+    );
   }
+
+  final int? totalItems;
+  final String? kind;
+  final List<Item>? items;
+
+  @override
+  List<Object?> get props => [totalItems, kind, items];
 }
 
-class Item {
-  final String kind;
-  final String etag;
-  final VolumeInfo volumeinfo;
-
-  Item({this.kind, this.etag, this.volumeinfo});
+class Item extends Equatable {
+  const Item({
+    this.kind,
+    this.etag,
+    this.volumeInfo,
+  });
 
   factory Item.fromJson(Map<String, dynamic> parsedJson) {
+    final volumeInfo = parsedJson['volumeInfo'];
     return Item(
-        kind: parsedJson['kind'],
-        etag: parsedJson['etag'],
-        volumeinfo: VolumeInfo.fromJson(parsedJson['volumeInfo']));
+      kind: parsedJson['kind'] as String?,
+      etag: parsedJson['etag'] as String?,
+      volumeInfo: volumeInfo is Map<String, dynamic>
+          ? VolumeInfo.fromJson(volumeInfo)
+          : null,
+    );
   }
+
+  final String? kind;
+  final String? etag;
+  final VolumeInfo? volumeInfo;
+
+  @override
+  List<Object?> get props => [kind, etag, volumeInfo];
 }
 
-class VolumeInfo {
-  final String title;
-  final String publisher;
-  final String printType;
-  final ImageLinks image;
-
-  VolumeInfo({
-    this.printType,
+class VolumeInfo extends Equatable {
+  const VolumeInfo({
     this.title,
     this.publisher,
+    this.printType,
     this.image,
   });
 
   factory VolumeInfo.fromJson(Map<String, dynamic> parsedJson) {
+    final imageLinks = parsedJson['imageLinks'];
     return VolumeInfo(
-      title: parsedJson['title'],
-      publisher: parsedJson['publisher'],
-      printType: parsedJson['printType'],
-      image: ImageLinks.fromJson(
-        parsedJson['imageLinks'],
-      ),
+      title: parsedJson['title'] as String?,
+      publisher: parsedJson['publisher'] as String?,
+      printType: parsedJson['printType'] as String?,
+      image: imageLinks is Map<String, dynamic>
+          ? ImageLinks.fromJson(imageLinks)
+          : null,
     );
   }
+
+  final String? title;
+  final String? publisher;
+  final String? printType;
+  final ImageLinks? image;
+
+  @override
+  List<Object?> get props => [title, publisher, printType, image];
 }
 
-class ImageLinks {
-  final String thumb;
-
-  ImageLinks({this.thumb});
+class ImageLinks extends Equatable {
+  const ImageLinks({this.thumbnail});
 
   factory ImageLinks.fromJson(Map<String, dynamic> parsedJson) {
-    return ImageLinks(thumb: parsedJson['thumbnail']);
+    return ImageLinks(
+      thumbnail: parsedJson['thumbnail'] as String?,
+    );
   }
+
+  final String? thumbnail;
+
+  @override
+  List<Object?> get props => [thumbnail];
 }
 
-class ISBN {
-  final String iSBN13;
-  final String type;
-
-  ISBN({this.iSBN13, this.type});
+class ISBN extends Equatable {
+  const ISBN({this.isbn13, this.type});
 
   factory ISBN.fromJson(Map<String, dynamic> parsedJson) {
     return ISBN(
-      iSBN13: parsedJson['identifier'],
-      type: parsedJson['type'],
+      isbn13: parsedJson['identifier'] as String?,
+      type: parsedJson['type'] as String?,
     );
   }
+
+  final String? isbn13;
+  final String? type;
+
+  @override
+  List<Object?> get props => [isbn13, type];
 }
