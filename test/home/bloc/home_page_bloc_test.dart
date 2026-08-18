@@ -9,18 +9,18 @@ import 'package:livros/models/livros_api_model.dart';
 import 'package:livros/models/result_model.dart';
 import 'package:mocktail/mocktail.dart';
 
-class MockLivrosService extends Mock implements LivrosService {}
+class _MockLivrosService extends Mock implements LivrosService {}
 
 void main() {
-  late MockLivrosService livrosService;
-  late Repository repository;
+  group(HomePageBloc, () {
+    late _MockLivrosService livrosService;
+    late Repository repository;
 
-  setUp(() {
-    livrosService = MockLivrosService();
-    repository = Repository(livrosService: livrosService);
-  });
+    setUp(() {
+      livrosService = _MockLivrosService();
+      repository = Repository(livrosService: livrosService);
+    });
 
-  group('HomePageBloc', () {
     test('initial state is idle', () {
       expect(
         HomePageBloc(repository: repository).state,
