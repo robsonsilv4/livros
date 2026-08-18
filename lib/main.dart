@@ -1,46 +1,34 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'data/livro_service.dart';
-import 'data/repository.dart';
-import 'home/bloc/home_page_bloc.dart';
-import 'home/home_page.dart';
+import 'package:livros/data/livro_service.dart';
+import 'package:livros/data/repository.dart';
+import 'package:livros/home/bloc/home_page_bloc.dart';
+import 'package:livros/home/home_page.dart';
 
-void main() => runApp(App());
-
-class App extends StatefulWidget {
-  @override
-  _AppState createState() => _AppState();
+void main() {
+  runApp(const LivrosApp());
 }
 
-class _AppState extends State<App> {
-  HomePageBloc _homePageBloc;
-
-  @override
-  void initState() {
-    super.initState();
-    SystemChrome.setEnabledSystemUIOverlays([]);
-
-    final livroService = LivrosService();
-    final repository = Repository(
-      livrosService: livroService,
-    );
-
-    _homePageBloc = HomePageBloc(repository: repository);
-  }
+class LivrosApp extends StatelessWidget {
+  const LivrosApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => _homePageBloc,
+      create: (_) => HomePageBloc(
+        repository: Repository(
+          livrosService: LivrosService(),
+        ),
+      ),
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'Livros',
         theme: ThemeData(
-          primarySwatch: Colors.blue,
+          useMaterial3: true,
+          colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
         ),
-        home: HomePage(),
+        home: const HomePage(),
       ),
     );
   }

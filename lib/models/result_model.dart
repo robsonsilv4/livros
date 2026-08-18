@@ -1,20 +1,10 @@
-import 'package:meta/meta.dart';
+import 'package:equatable/equatable.dart';
 
-import 'result_status_model.dart';
+import 'package:livros/models/result_status_model.dart';
 
-class Result<T, E> {
-  final T data;
-  final E error;
-  final ResultStatus status;
-
-  Result({
-    @required this.data,
-    @required this.error,
-    @required this.status,
-  });
-
+class Result<T, E> extends Equatable {
   factory Result.success(T data) {
-    return Result(
+    return Result._(
       data: data,
       error: null,
       status: ResultStatus.success,
@@ -22,7 +12,7 @@ class Result<T, E> {
   }
 
   factory Result.error(E error) {
-    return Result(
+    return Result._(
       data: null,
       error: error,
       status: ResultStatus.error,
@@ -30,18 +20,30 @@ class Result<T, E> {
   }
 
   factory Result.loading() {
-    return Result(
+    return const Result._(
       data: null,
       error: null,
       status: ResultStatus.loading,
     );
   }
 
-  factory Result.idle({T data}) {
-    return Result(
+  factory Result.idle({T? data}) {
+    return Result._(
       data: data,
       error: null,
       status: ResultStatus.idle,
     );
   }
+  const Result._({
+    required this.data,
+    required this.error,
+    required this.status,
+  });
+
+  final T? data;
+  final E? error;
+  final ResultStatus status;
+
+  @override
+  List<Object?> get props => [data, error, status];
 }

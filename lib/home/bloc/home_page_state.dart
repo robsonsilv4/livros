@@ -1,28 +1,27 @@
 import 'package:equatable/equatable.dart';
-import 'package:meta/meta.dart';
 
-import '../../models/livros_api_model.dart';
-import '../../models/result_model.dart';
+import 'package:livros/models/livros_api_model.dart';
+import 'package:livros/models/result_model.dart';
 
 class HomePageState extends Equatable {
-  final String categoria;
-  final Result<List<Item>, String> livros;
-
-  HomePageState({
-    @required this.categoria,
-    @required this.livros,
+  const HomePageState({
+    required this.categoria,
+    required this.livros,
   });
 
   factory HomePageState.initial() {
     return HomePageState(
       categoria: '',
-      livros: Result.idle(data: []),
+      livros: Result.idle(data: const []),
     );
   }
 
-  HomePageState copy({
-    String categoria,
-    Result<List<Item>, String> livros,
+  final String categoria;
+  final Result<List<Item>, String> livros;
+
+  HomePageState copyWith({
+    String? categoria,
+    Result<List<Item>, String>? livros,
   }) {
     return HomePageState(
       categoria: categoria ?? this.categoria,
@@ -31,8 +30,5 @@ class HomePageState extends Equatable {
   }
 
   @override
-  List<Object> get props => [
-        categoria,
-        livros,
-      ];
+  List<Object?> get props => [categoria, livros];
 }
