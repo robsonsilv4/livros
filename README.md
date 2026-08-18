@@ -6,7 +6,7 @@
 
 A Flutter book search app powered by the Google Books API, built with [bloc](https://pub.dev/packages/bloc). The project where bloc started to make sense to me.
 
-![Preview](./screenshots/01.png)
+![Livros banner](./screenshots/banner.webp)
 
 ## Features
 
@@ -44,4 +44,4 @@ The suite covers the data layer (models and service), the bloc logic, and the UI
 
 ## Acknowledgments
 
-Inspired by the Flutter and bloc video series by [Pedro Massango](https://www.youtube.com/playlist?list=PLum90SMJW-vn-1p0JdIrTuZfjNqNT2V6E).
+Inspired by the Flutter and bloc video series by [Pedro Massango](https://www.youtube.com/playlist?list=PLum90SMJW-vn-1p0JdIrTuZfjNqNT2V6E). Thanks, Pedro!
